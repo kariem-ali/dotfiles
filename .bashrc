@@ -19,6 +19,12 @@ PS1="${G}\u@\h:${Y}\w${W}\$(get_git_branch)$ ${W}"
 # zsh-style auto-complete (cycle through options).
 bind 'TAB:menu-complete'
 
+EDITOR="/usr/bin/vi"
+HOME="/c/Users/Kariem"
+
+eval `ssh-agent -s`   # Run the SSH agent
+ssh-add /.ssh/id_rsa  # Add the SSH key
+
 export PATH=/c/utils/gnuwin32/bin:\
 /c/utils/git/bin:\
 ~/Projects/Bash:\
@@ -39,9 +45,6 @@ export PATH=/c/utils/gnuwin32/bin:\
 /c/Windows/Microsoft.NET/Framework/v4.0.30319/:\
 /c/Chocolatey/lib/ctags.5.8.1/tools/:\
 /c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 11.0/Common7/IDE
-
-EDITOR="/usr/bin/vi"
-HOME="/c/Users/Kariem"
 
 function subl() {
   /c/Program\ Files/Sublime\ Text\ 2/sublime_text.exe -w $@ &
