@@ -19,16 +19,15 @@ PS1="${G}\u@\h:${Y}\w${W}\$(get_git_branch)$ ${W}"
 # zsh-style auto-complete (cycle through options).
 bind 'TAB:menu-complete'
 
-EDITOR="/usr/bin/vi"
-HOME="/c/Users/Kariem"
 
 eval `ssh-agent -s`   # Run the SSH agent
 ssh-add /.ssh/id_rsa  # Add the SSH key
 
-export PATH=/c/utils/gnuwin32/bin:\
+export PATH=/c/RailsInstaller/Ruby1.9.3/bin:\
+/c/cygwin/bin:\
 /c/utils/git/bin:\
+/c/utils/gnuwin32/bin:\
 ~/Projects/Bash:\
-/c/RailsInstaller/Ruby1.9.3/bin:\
 /c/utils/far:\
 /c/Program\ Files/nodejs:\
 /c/Users/Kariem/AppData/Roaming/npm:\
@@ -46,8 +45,19 @@ export PATH=/c/utils/gnuwin32/bin:\
 /c/Chocolatey/lib/ctags.5.8.1/tools/:\
 /c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 11.0/Common7/IDE
 
+vim=/c/utils/vim73/vim
+export EDITOR=$vim
+export HOME="/c/Users/Kariem"
+
 function subl() {
-  /c/Program\ Files/Sublime\ Text\ 2/sublime_text.exe -w $@ &
+  /c/Program\ Files/Sublime\ Text\ 2/sublime_text.exe -w "$@" &
 }
+
+function view() {
+   $vim -M "$*"
+}
+
 alias firefox='/c/Program\ Files\ \(x86\)/Mozilla\ Firefox/firefox.exe'
 alias e=subl
+alias vi=$vim
+alias vim=$vim
