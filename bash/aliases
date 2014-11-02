@@ -3,8 +3,8 @@ function run_ssh_agent() {
   ssh-add ~/.ssh/id_rsa  # Add the SSH key
 }
 
-alias browse='/c/program\ files/internet\ explorer/iexplore.exe'
-alias firefox='/c/Program\ Files\ \(x86\)/Mozilla\ Firefox/firefox.exe'
+alias browse=$browser
+alias firefox=$firefox
 alias e=$vim
 alias vi=$vim
 alias vim=$vim
