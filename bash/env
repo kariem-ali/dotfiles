@@ -14,7 +14,6 @@ PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
 
 vim="/c/Program\ Files\ \(x86\)/vim/vim74/vim.exe"
 export EDITOR=$vim
-export HOME="/c/Users/Kariem"
 
 # Fix git 'WARNING: terminal is not fully functional'. Happens
 # due to strawberry perl setting a global env. variable TERM=dump
