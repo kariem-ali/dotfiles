@@ -1,4 +1,4 @@
+. ~/Projects/dotfiles/bash/env.win32
 . ~/Projects/dotfiles/bash/config
 . ~/Projects/dotfiles/bash/prompt
-. ~/Projects/dotfiles/bash/env.win32
 . ~/Projects/dotfiles/bash/aliases
