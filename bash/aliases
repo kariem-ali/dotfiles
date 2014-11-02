@@ -1,19 +1,11 @@
 function run_ssh_agent() {
-  eval `ssh-agent -s`   # Run the SSH agent
+  eval `ssh-agent -s`    # Run the SSH agent
   ssh-add ~/.ssh/id_rsa  # Add the SSH key
-}
-
-function subl() {
-  /c/Program\ Files/Sublime\ Text\ 2/sublime_text.exe -w "$@" &
-}
-
-function view() {
-   "$vim" -M "$*"
 }
 
 alias browse='/c/program\ files/internet\ explorer/iexplore.exe'
 alias firefox='/c/Program\ Files\ \(x86\)/Mozilla\ Firefox/firefox.exe'
-alias e=subl
+alias e=$vim
 alias vi=$vim
 alias vim=$vim
-
+alias view='vim -M'
