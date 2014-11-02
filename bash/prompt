@@ -1,0 +1,13 @@
+function get_git_branch()
+{
+  if [ -d .git ]; then
+    echo "(`git branch | grep "^\*" | cut -c3-`)"
+  fi
+}
+
+function get_time()
+{
+  echo "`date +%H:%M:%S`"
+}
+
+export PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
