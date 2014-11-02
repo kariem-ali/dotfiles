@@ -1,6 +1,6 @@
 function run_ssh_agent() {
   eval `ssh-agent -s`   # Run the SSH agent
-  ssh-add /.ssh/id_rsa  # Add the SSH key
+  ssh-add ~/.ssh/id_rsa  # Add the SSH key
 }
 
 function subl() {
@@ -8,7 +8,7 @@ function subl() {
 }
 
 function view() {
-   $vim -M "$*"
+   "$vim" -M "$*"
 }
 
 alias browse='/c/program\ files/internet\ explorer/iexplore.exe'
