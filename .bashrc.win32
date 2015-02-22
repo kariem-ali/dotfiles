@@ -1,4 +1,5 @@
 . ~/Projects/dotfiles/bash/env.win32
 . ~/Projects/dotfiles/bash/config
+. /c/utils/git/etc/git-prompt.sh
 . ~/Projects/dotfiles/bash/prompt
 . ~/Projects/dotfiles/bash/aliases

@@ -10,4 +10,5 @@ function get_time()
   echo "`date +%H:%M:%S`"
 }
 
-export PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
+#export PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
+export PS1="${G}\u@\h:${Y}\W${W}\$(__git_ps1 \"(%s)\")\n\\$ ${W}"
