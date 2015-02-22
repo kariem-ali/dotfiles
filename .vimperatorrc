@@ -1,0 +1,20 @@
+set vb
+set gui=nonavigation,notabs
+set complete-=f
+set editor='c:\\utils\\ConEmu\\ConEmu64.exe /cmd "C:\\Program Files (x86)\\vim\\vim74\\vim.exe"'
+
+let mapleader=","
+map <c-]> <esc>
+map [t <c-p>
+map ]t <c-n>
+map [T :tabmove -1<cr>
+map ]T :tabmove +1<cr>
+map <leader><leader> <c-^>
+map <leader>d :tabduplicate<cr>
+map <leader>dd <c-s-del>
+map <leader>e :emenu Tools.Add to Evernote<cr>
+map <leader>i :bmarks instapaper<cr>;o
+map <leader>w :tabdetach<cr>
+
+hi! CmdLine background: black; color: white; transition: all 0.25s;
+hi! CmdLine>* font-family: "Source Code Pro", Consolas, monospace; font-size: 12px;
