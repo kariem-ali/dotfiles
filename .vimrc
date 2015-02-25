@@ -2,14 +2,12 @@
 
 " set runtime path to use ~/.vim
 set runtimepath+=~/.vim,~/.vim/after
-"let &runtimepath=substitute(&runtimepath, "\\~/vimfiles", "\\~/.vim", "g")
 
 set ai                          " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
 set vb                          " turn on the "visual bell" - which is much quieter than the "audio blink"
 set ruler                       " show the cursor position all the time
 set laststatus=2                " make the last line where the status is two lines deep so you can see status always
-"set cmdheight=2                " make the command 2 lines instead of one
 set backspace=indent,eol,start  " make that backspace key work the way it should
 set nocompatible                " vi compatible is LAME
 set background=dark             " Use colours that work well on a dark background (Console is usually black)
@@ -42,9 +40,7 @@ au BufNewFile,BufRead *.coffee set syntax=coffee
 " set syntax to html for .hta files
 au BufNewFile,BufRead *.hta set syntax=html 
 
-" Sources the default git bashrc file
-"set shell=C:\utils\git\bin\bash.exe\ --login
-" Sources my bashrc file
+" Source my .bashrc
 set shell=C:\utils\git\bin\bash.exe\ --rcfile\ ~/.bashrc
 
 " Show syntax highlighting groups for word under cursor
@@ -71,17 +67,6 @@ function! Doc()
 
   let s:cmd = "silent !firefox"." ".s:url." &"
   execute s:cmd
-endfunction
-
-map <leader>cva :call CreateVariableAccessor()<cr>
-function! CreateVariableAccessor()
-  normal "ayiw
-  exec "normal o" . "\<cr>public function get" . @a . "(){"
-  normal ==
-  exec "normal o" . "return $this->" . @a .";"
-  normal ==
-  exec "normal o" . "}"
-  normal ==
 endfunction
 
 " Show EOL type and last modified timestamp, right after the filename
