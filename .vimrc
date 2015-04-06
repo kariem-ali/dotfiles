@@ -27,8 +27,10 @@ set shiftwidth=2
 set foldmethod=syntax           " Fold using syntax rules (i.e. #region for C# etc...)
 set colorcolumn=81              " Add boundary column at 81 reference
 set t_Co=256                    " Set number of colours to 256
+set splitbelow                  " New windows open below
+set splitright                  " New vertical windows open to the right
 let mapleader = ","
-
+map <leader><leader> <c-^>      " switch to alternate buffer
 colorscheme Solarized
 
 " highlight boundary columns background with black
