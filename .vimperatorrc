@@ -10,13 +10,29 @@ map ]t <c-n>
 map [T :tabmove -1<cr>
 map ]T :tabmove +1<cr>
 map <leader><leader> <c-^>
-map <leader>d :tabduplicate<cr>
-map <leader>dd <c-s-del>
-map <leader>e :emenu Tools.Add to Evernote<cr>
+map <leader>y :tabduplicate<cr>
+map <leader>c <c-s-del>
+map <leader>e :emenu Tools.WebClipper<cr>
+map <leader>s :emenu Tools.Session Manager.Session Manager.Save Current Window...<cr>
+map <leader>l :emenu Tools.Session Manager.Session Manager.Load Session...<cr>
 map <leader>i :bmarks instapaper<cr>;o
 map <leader>w :tabdetach<cr>
 map <leader>t <s-o><c-a><c-right>https://translate.google.com/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=<cr>
-map <leader>def Ytthefreedictionary.com/<c-v><cr>
+map <leader>d Ytthefreedictionary.com/<c-v><cr>
+map <leader>. :bdelete -s lastactive<cr>
+
+javascript <<EOF
+  function define() {
+    var d = window.content.window.document;
+    var el = d.getSelection().anchorNode.parentElement;
+    var txt = d.getSelection().toString();
+    var div = d.createElement('div');
+    div.innerHTML = '<div style="color:red;">' + txt + '</div>';
+    div.style = 'background-color:#ffd;border:1px solid #a99;border-radius:3px;margin:5px;padding:5px;position:absolute;z-index:99999;';
+    div.addEventListener('click', function(){ this.parentNode.removeChild(this); }, false)
+    el.appendChild(div);
+  }
+EOF
 
 hi! CmdLine background: black; color: white; transition: all 0.25s;
 hi! CmdLine>* font-family: "Source Code Pro", Consolas, monospace; font-size: 12px;
