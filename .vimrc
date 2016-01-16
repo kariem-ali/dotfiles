@@ -2,6 +2,7 @@
 
 " set runtime path to use ~/.vim
 set runtimepath+=~/.vim,~/.vim/after
+execute pathogen#infect()
 
 set ai                          " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
@@ -30,7 +31,9 @@ set t_Co=256                    " Set number of colours to 256
 set splitbelow                  " New windows open below
 set splitright                  " New vertical windows open to the right
 let mapleader = ","
-map <leader><leader> <c-^>      " switch to alternate buffer
+nmap <leader><leader> <c-^>      " switch to alternate buffer
+nmap H ^
+nmap L $
 colorscheme Solarized
 
 " highlight boundary columns background with black
