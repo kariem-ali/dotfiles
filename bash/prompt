@@ -9,6 +9,6 @@ function get_time()
 {
   echo "`date +%H:%M:%S`"
 }
-
+separator=`seq -s '-' $COLUMNS | grep -o '-' | xargs | sed 's/\s//g'`
 #export PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
-export PS1="${G}\u@\h:${Y}\W${W}\$(__git_ps1 \"(%s)\")\n\\$ ${W}"
+export PS1="${DarkGray}$separator\n${G}\u@\h:${Y}\W${W}\$(__git_ps1 \"(%s)\")\n\\$ ${W}"

@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+ln -s .inputrc ~/.inputrc
 ln -s .bashrc.osx ~/.bashrc
 ln -s .gitconfig ~/.gitconfig
 ln -s .vimperatorrc ~/.vimperatorrc

@@ -3,9 +3,23 @@ function run_ssh_agent() {
   ssh-add ~/.ssh/id_rsa  # Add the SSH key
 }
 
-alias browse=$browser
+#alias browse=$browser
 alias firefox=$firefox
-alias e=$vim
-alias vi=$vim
-alias vim=$vim
+#alias e=$vim
+#alias vi=$vim
+#alias vim=$vim
 alias view='vim -M'
+alias sml='cmd //c "C:\Program Files (x86)\SMLNJ\bin\sml.bat"'
+
+function mcd() {
+  mkdir -p $1 && cd $1
+}
+
+function cdf() {
+  cd *$1*/
+}
+
+function rider() {
+  /mnt/c/Program\ Files/JetBrains/Rider\ 2017.1.1/bin/rider64.exe "$1" &
+}
+
