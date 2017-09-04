@@ -1,6 +1,6 @@
 export HOME=/mnt/c/Users/Kariem
-. /mnt/c/Users/Kariem/Projects/dotfiles/bash/env.win32
-. /mnt/c/Users/Kariem/Projects/dotfiles/bash/config
-. /mnt/c/utils/git/etc/git-prompt.sh
-. /mnt/c/Users/Kariem/Projects/dotfiles/bash/prompt
-. /mnt/c/Users/Kariem/Projects/dotfiles/bash/aliases
+. ~/Projects/dotfiles/bash/env.win32
+. ~/Projects/dotfiles/bash/config
+. ~/Projects/dotfiles/bash/git-prompt.sh
+. ~/Projects/dotfiles/bash/prompt
+. ~/Projects/dotfiles/bash/aliases
