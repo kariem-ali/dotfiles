@@ -1,7 +1,9 @@
 # zsh-style auto-complete (cycle through options).
 bind 'TAB:menu-complete'
 
-stty -ixon #Disable XON/XOFF flow control. Enables using Ctrl+S for forward search history.
+# Disable XON/XOFF flow control, so Ctrl+S searches history forward (and works in vim).
+# Only when attached to a terminal; stty fails otherwise.
+[[ -t 0 ]] && stty -ixon
 
 K="\[\033[0;30m\]"    # black
 R="\[\033[0;31m\]"    # red

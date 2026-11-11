@@ -1,10 +1,6 @@
 function run_ssh_agent() {
   eval `ssh-agent -s`    # Run the SSH agent
-  #ssh-add /home/kariem/.ssh/id_rsa  # Add the SSH key
-  #ssh-add ~/Projects/.ssh/id_rsa  # Add the SSH key
-  #ssh-add ~/.ssh/id_ed25519  # Add the SSH key
   ssh-add ~/.ssh/id_ed25519 # Add the SSH key
-
 }
 
 alias ll='ls -l'
@@ -19,9 +15,6 @@ alias gd='git diff'
 alias gdc='git diff --cached'
 alias gsh='git show'
 alias gun='git reset HEAD --'
-alias browse=$browse
-alias chrome=$chrome
-alias firefox=$firefox
 #alias e=$vim
 #alias vi=$vim
 #alias vim=$vim
@@ -34,16 +27,23 @@ alias pg12="psql -h `grep nameserver /etc/resolv.conf | awk '{ print $2 }'` -U p
 #alias pip='python3.9 -m pip'
 #alias python3='python3.9'
 
-alias antlr3='java -jar /usr/local/antlr-3.0/lib/antlr-3.0.jar'
-alias antlr4='java -jar /usr/local/antlr-4.0/lib/antlr-4.0-complete.jar'
-alias grun='java org.antlr.v4.runtime.misc.TestRig'
-
+# mcd DIR: create DIR (and parents) and cd into it.
 function mcd() {
-  mkdir -p $1 && cd $1
+  if [ $# -ne 1 ]; then echo 'usage: mcd DIR' >&2; return 2; fi
+  mkdir -p -- "$1" && cd -- "$1"
 }
 
+# cdf TEXT: cd into the one folder here whose name contains TEXT.
 function cdf() {
-  cd *$1*/
+  if [ $# -ne 1 ]; then echo 'usage: cdf TEXT' >&2; return 2; fi
+  local d matches=()
+  for d in *"$1"*/; do [ -d "$d" ] && matches+=("$d"); done
+  case ${#matches[@]} in
+    0) echo "cdf: no folder here contains '$1'" >&2; return 1 ;;
+    1) cd -- "${matches[0]}" ;;
+    *) echo "cdf: several folders contain '$1':" >&2
+       printf '  %s\n' "${matches[@]}" >&2; return 1 ;;
+  esac
 }
 
 function rider() {
