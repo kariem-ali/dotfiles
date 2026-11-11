@@ -9,8 +9,18 @@ function get_time()
 {
   echo "`date +%H:%M:%S`"
 }
-separator=`seq -s '-' $((COLUMNS)) | grep -o '-' | xargs | sed 's/[[:space:]]//g'`
+# Old: one dash short of full width, and fixed at the width the shell started with
+#separator=`seq -s '-' $((COLUMNS)) | grep -o '-' | xargs | sed 's/[[:space:]]//g'`
+# Full-width separator, rebuilt before every prompt so it follows window resizes
+__update_separator() {
+  printf -v separator '%*s' "${COLUMNS:-80}" ''
+  separator=${separator// /-}
+}
+# Register once, even if ~/.bashrc is sourced again in the same session
+if [[ $PROMPT_COMMAND != *__update_separator* ]]; then
+  PROMPT_COMMAND="__update_separator${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
+fi
 #export PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
 #export PS1="${Gray}$separator\n${G}\u@\h:${Y}\W${W}\$(__git_ps1 \"(%s)\")\n\\$ ${W}"
-export PS1="${LightBlue}$separator\n${G}\u${LightGreen}@${G}\h${LightBlue}:${Y}\W${LightBlue}\$(__git_ps1 \"(%s)\")\n${B}\\$ ${W}"
+export PS1="${LightBlue}\${separator}\n${G}\u${LightGreen}@${G}\h${LightBlue}:${Y}\W${LightBlue}\$(__git_ps1 \"(%s)\")\n${B}\\$ ${W}"
 
