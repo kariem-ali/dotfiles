@@ -1,15 +1,5 @@
 [user]
-	name = Kariem Ali
+	name = Kariem Elkoush
 	email = kariem.elkoush@gmail.com
-[gui]
 [core]
 	editor = vim
-	autocrlf = true
-[help]
-	format = web
-	browser = firefox
-[web]
-	browser = firefox
-[browser "firefox"]
-	cmd = firefox
-	path = firefox

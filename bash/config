@@ -1,6 +1,8 @@
 # zsh-style auto-complete (cycle through options).
 bind 'TAB:menu-complete'
 
+stty -ixon #Disable XON/XOFF flow control. Enables using Ctrl+S for forward search history.
+
 K="\[\033[0;30m\]"    # black
 R="\[\033[0;31m\]"    # red
 G="\[\033[0;32m\]"    # green

@@ -1,15 +1,42 @@
 function run_ssh_agent() {
   eval `ssh-agent -s`    # Run the SSH agent
-  ssh-add ~/.ssh/id_rsa  # Add the SSH key
+  #ssh-add /home/kariem/.ssh/id_rsa  # Add the SSH key
+  #ssh-add ~/Projects/.ssh/id_rsa  # Add the SSH key
+  #ssh-add ~/.ssh/id_ed25519  # Add the SSH key
+  ssh-add ~/.ssh/id_ed25519 # Add the SSH key
+
 }
 
-#alias browse=$browser
+alias ll='ls -l'
+alias g=git
+alias ga='git add'
+alias gcm='git commit'
+alias gci='git commit'
+alias gl='git l'
+alias glg='git lg'
+alias gs='git status'
+alias gd='git diff'
+alias gdc='git diff --cached'
+alias gsh='git show'
+alias gun='git reset HEAD --'
+alias browse=$browse
+alias chrome=$chrome
 alias firefox=$firefox
 #alias e=$vim
 #alias vi=$vim
 #alias vim=$vim
 alias view='vim -M'
-alias sml='cmd //c "C:\Program Files (x86)\SMLNJ\bin\sml.bat"'
+alias msbuild=/mnt/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe
+alias sml='cmd.exe /c "C:\Program Files (x86)\SMLNJ\bin\sml.bat"'
+alias dotnet='dotnet.exe'
+alias pg="psql -h `grep nameserver /etc/resolv.conf | awk '{ print $2 }'` -U postgres -p 5433"
+alias pg12="psql -h `grep nameserver /etc/resolv.conf | awk '{ print $2 }'` -U postgres -p 5432"
+#alias pip='python3.9 -m pip'
+#alias python3='python3.9'
+
+alias antlr3='java -jar /usr/local/antlr-3.0/lib/antlr-3.0.jar'
+alias antlr4='java -jar /usr/local/antlr-4.0/lib/antlr-4.0-complete.jar'
+alias grun='java org.antlr.v4.runtime.misc.TestRig'
 
 function mcd() {
   mkdir -p $1 && cd $1
@@ -20,6 +47,9 @@ function cdf() {
 }
 
 function rider() {
-  /mnt/c/Program\ Files/JetBrains/Rider\ 2017.1.1/bin/rider64.exe "$1" &
+  /mnt/c/Program\ Files/JetBrains/JetBrains\ Rider\ 2020.1.4/bin/rider64.exe "$1" &
 }
 
+alias k='kubectl'
+alias kcontexts='kubectl config get-contexts'
+alias kccon='kubectl config current-context'

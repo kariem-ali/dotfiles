@@ -1,0 +1,12 @@
+# Vim runtime state and plugins installed by vim-plug
+.netrwhist
+.vim/plugged/
+*.old
+
+# Installer backups and editor leftovers
+*.bak-*
+*~
+
+# Machine-specific overrides (never committed)
+.bashrc.local
+.gitconfig.local
