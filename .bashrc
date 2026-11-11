@@ -34,7 +34,7 @@ if ! shopt -oq posix; then
 fi
 
 # --- Modules from this repo ---------------------------------------------------
-. "$DOTFILES/bash/env.win32"
+. "$DOTFILES/bash/env"
 . "$DOTFILES/bash/config"
 . "$DOTFILES/bash/git-prompt.sh"
 . "$DOTFILES/bash/prompt"

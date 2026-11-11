@@ -2,20 +2,23 @@
 
 " set runtime path to use ~/.vim
 set runtimepath+=~/.vim,~/.vim/after
-"execute pathogen#infect()
 
-" Specify a directory for plugins
-" - For Neovim: ~/.local/share/nvim/plugged
-" - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugged')
-"Plug 'w0rp/ale'
-"Plug 'Zaptic/elm-vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-fugitive'
-Plug 'dylon/vim-antlr'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-call plug#end()
+" Plugins, managed by vim-plug. Guarded so vim still starts cleanly on a fresh
+" machine before vim-plug and the plugins are installed.
+let s:have_plug = filereadable(expand('~/.vim/autoload/plug.vim'))
+if s:have_plug
+  call plug#begin('~/.vim/plugged')
+  "Plug 'w0rp/ale'
+  "Plug 'Zaptic/elm-vim'
+  Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-fugitive'
+  Plug 'dylon/vim-antlr'
+  Plug 'ctrlpvim/ctrlp.vim'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  call plug#end()               " also turns on filetype plugins, indent and syntax
+else
+  filetype plugin indent on
+endif
 
 set ai                          " set auto-indenting on for programming
 set showmatch                   " automatically show matching brackets. works like it does in bbedit.
@@ -28,9 +31,13 @@ set nocompatible                " vi compatible is LAME
 set showmode                    " show the current mode
 syntax on                       " turn syntax highlighting on by default
 set number                      " show lines numbers
-set shellslash                  " sets the file path separator to be compatible with unix shell i.e. / not \
+if has('win32')
+  set shellslash                " use / in expanded paths, for Unix-style shells on Windows
+endif
 set diffopt+=iwhite             " ignore whitespace for diffs
-set shellcmdflag=-ic            " Set shell to be interactive. Adds support for using bash aliases in :!
+if !has('win32')
+  set shellcmdflag=-ic          " Set shell to be interactive. Adds support for using bash aliases in :!
+endif
 set hidden                      " Better handling of multiple buffers
 set ignorecase smartcase        " Search patterns are case-sensitive only if they contain upper case characters
 set incsearch                   " Highlight matched search strings as you type search pattern
@@ -50,7 +57,9 @@ xnoremap H ^
 nnoremap L $
 xnoremap L $
 
-set shell=/bin/bash
+if !has('win32')
+  set shell=/bin/bash           " on Windows, keep the default (cmd.exe)
+endif
 
 " highlight boundary columns background with black
 highlight ColorColumn ctermbg=darkgrey
@@ -62,15 +71,14 @@ highlight ColorColumn ctermbg=darkgrey
 " set syntax for .coffee files
 au BufNewFile,BufRead *.coffee set syntax=coffee 
 
-" set syntax to html for .hta files
-au BufNewFile,BufRead *.hta set syntax=html 
+" set syntax to html for .hta files (Windows HTML Applications)
+au BufNewFile,BufRead *.hta set syntax=html
 
 au BufNewFile,BufRead *.fs,*.fsx set ft=fsharp syntax=ocaml
-au BufNewFile,BufRead *.fsx noremap <leader>m :w\|:!fsi.exe %<cr>
+au BufNewFile,BufRead *.fsx noremap <buffer> <leader>m :w\|:!dotnet fsi %<cr>
+au BufNewFile,BufRead *.cpp,*.h noremap <buffer> <leader>m :w\|!g++ -std=c++17 -O2 -Wall %:r.cpp -o %:r.out && %:r.out<cr>
 
-au BufNewFile,BufRead *.cpp,*.h noremap <leader>m :w\|!g++ -std=c++17 -O2 -Wall %:r.cpp -o %:r.out && %:r.out<cr>
-
-au BufNewFile,BufRead *.js noremap <leader>m :w\|:!node %<cr>
+au BufNewFile,BufRead *.js noremap <buffer> <leader>m :w\|:!node %<cr>
 
 au BufRead,BufNewFile *.g set filetype=antlr3
 au BufRead,BufNewFile *.g4 set filetype=antlr4
@@ -81,6 +89,10 @@ au BufRead,BufNewFile *.g4 set filetype=antlr4
 "au BufWritePost *.elm execute "silent !elm-format --yes %"
 
 " Sane command-line mode mappings
+" Alt+B / Alt+F arrive from the terminal as Esc+b / Esc+f. Wait at most 100 ms
+" for the rest of a key code, so Esc followed by b/f is only read as Alt+B/Alt+F
+" when typed within 100 ms (and Esc itself takes effect faster).
+set ttimeout ttimeoutlen=100
 execute "set <M-B>=\eb"
 execute "set <M-F>=\ef"
 "execute "set <M-D>=\ed"
@@ -92,7 +104,25 @@ cnoremap <M-F> <S-Right>
 " Ctrl-P
 let g:ctrlp_switch_buffer = 'Et'
 
-" CoC
+" CoC: only when the plugin is installed and Node is available. Otherwise coc
+" reports an error at every start and its mappings (Tab, Enter, CursorHold)
+" don't work. Without Node the plugin stays installed but isn't started.
+" The block runs to the matching 'endif " CoC'.
+let s:have_coc = s:have_plug && isdirectory(expand('~/.vim/plugged/coc.nvim'))
+      \ && executable(get(g:, 'coc_node_path', empty($COC_NODE_PATH) ? 'node' : $COC_NODE_PATH))
+if !s:have_coc
+  let g:coc_start_at_startup = 0
+  if s:have_plug && isdirectory(expand('~/.vim/plugged/coc.nvim'))
+    augroup coc_node_reminder
+      autocmd!
+      autocmd VimEnter * echohl WarningMsg | echo 'coc.nvim is off: Node.js not found' | echohl None
+    augroup END
+  endif
+endif
+if s:have_coc
+
+" Extensions coc installs on first start, so a fresh machine gets the same set.
+let g:coc_global_extensions = ['coc-json', 'coc-tsserver']
 
 " TextEdit might fail if hidden is not set.
 set hidden
@@ -146,8 +176,9 @@ nmap <silent> [e <Plug>(coc-diagnostic-prev-error)
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+" <space>i / <space>r instead of gi / gr, to keep Vim's built-in gi and gr
+nmap <silent> <space>i <Plug>(coc-implementation)
+nmap <silent> <space>r <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call <SID>show_documentation()<CR>
@@ -259,6 +290,8 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+endif " CoC
+
 " Show syntax highlighting groups for word under cursor
 nmap <F3> :call <SID>SynStack()<CR>
 function! <SID>SynStack()
@@ -268,29 +301,18 @@ function! <SID>SynStack()
   echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 endfunc
 
-" Help Integration
-map <silent> <F1> :call Doc()<CR>
-imap <silent> <F1> <ESC>:call Doc()<CR>
-function! Doc()
-  let s:currentWord = expand("<cword>")
-
-  if &ft =~ "cs"
-    let s:url = "http://social.msdn.microsoft.com/Search/en-US/?Refinement=26\\&Query=".s:currentWord
-  else
-    execute "help ".s:currentWord
-    return
-  endif
-
-  let s:cmd = "silent !firefox"." ".s:url." &"
-  execute s:cmd
-endfunction
+" F1: Vim help for the word under the cursor
+nnoremap <silent> <F1> :execute 'help ' . expand('<cword>')<CR>
+inoremap <silent> <F1> <Esc>:execute 'help ' . expand('<cword>')<CR>
 
 " Show EOL type and last modified timestamp, right after the filename
 set statusline=%<%F%h%m%r\ [%{&ff}]\ (%{strftime(\"%H:%M\ %d/%m/%Y\",getftime(expand(\"%:p\")))})%=%l,%c%V\ %P
 
 " Setting GUI specific options
 if has("gui_running")
-  set guifont=Source_Code_Pro:h11
+  if has('win32')
+    set guifont=Source_Code_Pro:h11
+  endif
   set guioptions-=T " Remove toolbar
   set guioptions-=m " Remove menu
 endif
@@ -340,132 +362,3 @@ highlight SpellBad ctermfg=red ctermbg=gray
 "let &t_SI.="\e[5 q"
 "let &t_SR.="\e[4 q"
 "let &t_EI.="\e[1 q"
-
-"if has("autocmd")
-  "let conEmuMacro = "!/mnt/c/utils/ConEmu/ConEmu/ConEmuC64.exe -guimacro setoption check"
-  "let beamCursor = conEmuMacro . " 2531 " . "1 >/dev/null 2>&1 &"
-  "let blockCursor = conEmuMacro . " 2532 " . "1 >/dev/null 2>&1 &"
-
-  "au VimLeave * silent execute beamCursor | redraw!
-  "au VimEnter * silent execute blockCursor | redraw!
-
-  "au InsertEnter * silent execute beamCursor | redraw!
-  "au InsertLeave * silent execute blockCursor | redraw!
-"endif
-
-"" OmniSharp won't work without this setting
-"
-"filetype plugin on
-"
-""let g:OmniSharp_server_type = 'roslyn'
-"
-""This is the default value, setting it isn't actually necessary
-"let g:OmniSharp_host = "http://localhost:2000"
-"
-""Set the type lookup function to use the preview window instead of the status line
-""let g:OmniSharp_typeLookupInPreview = 1
-"
-""Timeout in seconds to wait for a response from the server
-"let g:OmniSharp_timeout = 1
-"
-""Showmatch significantly slows down omnicomplete
-""when the first match contains parentheses.
-"set noshowmatch
-"
-""Super tab settings - uncomment the next 4 lines
-""let g:SuperTabDefaultCompletionType = 'context'
-""let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
-""let g:SuperTabDefaultCompletionTypeDiscovery = ["&omnifunc:<c-x><c-o>","&completefunc:<c-x><c-n>"]
-""let g:SuperTabClosePreviewOnPopupClose = 1
-"
-""don't autoselect first item in omnicomplete, show if only one item (for preview)
-""remove preview if you don't want to see any documentation whatsoever.
-"set completeopt=longest,menuone,preview
-"" Fetch full documentation during omnicomplete requests.
-"" There is a performance penalty with this (especially on Mono)
-"" By default, only Type/Method signatures are fetched. Full documentation can still be fetched when
-"" you need it with the :OmniSharpDocumentation command.
-"" let g:omnicomplete_fetch_documentation=1
-"
-""Move the preview window (code documentation) to the bottom of the screen, so it doesn't move the code!
-""You might also want to look at the echodoc plugin
-"set splitbelow
-"
-"" Get Code Issues and syntax errors
-"let g:syntastic_cs_checkers = ['syntax', 'semantic', 'issues']
-"" If you are using the omnisharp-roslyn backend, use the following
-"" let g:syntastic_cs_checkers = ['code_checker']
-"augroup omnisharp_commands
-"    autocmd!
-"
-"    "Set autocomplete function to OmniSharp (if not using YouCompleteMe completion plugin)
-"    autocmd FileType cs setlocal omnifunc=OmniSharp#Complete
-"
-"    " Synchronous build (blocks Vim)
-"    "autocmd FileType cs nnoremap <F5> :wa!<cr>:OmniSharpBuild<cr>
-"    " Builds can also run asynchronously with vim-dispatch installed
-"    autocmd FileType cs nnoremap <leader>b :wa!<cr>:OmniSharpBuildAsync<cr>
-"    " automatic syntax check on events (TextChanged requires Vim 7.4)
-"    autocmd BufEnter,TextChanged,InsertLeave *.cs SyntasticCheck
-"
-"    " Automatically add new cs files to the nearest project on save
-"    autocmd BufWritePost *.cs call OmniSharp#AddToProject()
-"
-"    "show type information automatically when the cursor stops moving
-"    autocmd CursorHold *.cs call OmniSharp#TypeLookupWithoutDocumentation()
-"
-"    "The following commands are contextual, based on the current cursor position.
-"
-"    autocmd FileType cs nnoremap gd :OmniSharpGotoDefinition<cr>
-"    autocmd FileType cs nnoremap <leader>fi :OmniSharpFindImplementations<cr>
-"    autocmd FileType cs nnoremap <leader>ft :OmniSharpFindType<cr>
-"    autocmd FileType cs nnoremap <leader>fs :OmniSharpFindSymbol<cr>
-"    autocmd FileType cs nnoremap <leader>fu :OmniSharpFindUsages<cr>
-"    "finds members in the current buffer
-"    autocmd FileType cs nnoremap <leader>fm :OmniSharpFindMembers<cr>
-"    " cursor can be anywhere on the line containing an issue
-"    autocmd FileType cs nnoremap <leader>x  :OmniSharpFixIssue<cr>
-"    autocmd FileType cs nnoremap <leader>fx :OmniSharpFixUsings<cr>
-"    autocmd FileType cs nnoremap <leader>tt :OmniSharpTypeLookup<cr>
-"    autocmd FileType cs nnoremap <leader>dc :OmniSharpDocumentation<cr>
-"    "navigate up by method/property/field
-"    autocmd FileType cs nnoremap <C-K> :OmniSharpNavigateUp<cr>
-"    "navigate down by method/property/field
-"    autocmd FileType cs nnoremap <C-J> :OmniSharpNavigateDown<cr>
-"
-"augroup END
-"
-"
-"" this setting controls how long to wait (in ms) before fetching type / symbol information.
-"set updatetime=500
-"" Remove 'Press Enter to continue' message when type information is longer than one line.
-"set cmdheight=2
-"
-"" Contextual code actions (requires CtrlP or unite.vim)
-"nnoremap <leader><space> :OmniSharpGetCodeActions<cr>
-"" Run code actions with text selected in visual mode to extract method
-"vnoremap <leader><space> :call OmniSharp#GetCodeActions('visual')<cr>
-"
-"" rename with dialog
-"nnoremap <leader>nm :OmniSharpRename<cr>
-"nnoremap <F2> :OmniSharpRename<cr>
-"" rename without dialog - with cursor on the symbol to rename... ':Rename newname'
-"command! -nargs=1 Rename :call OmniSharp#RenameTo("<args>")
-"
-"" Force OmniSharp to reload the solution. Useful when switching branches etc.
-"nnoremap <leader>rl :OmniSharpReloadSolution<cr>
-"nnoremap <leader>cf :OmniSharpCodeFormat<cr>
-"" Load the current .cs file to the nearest project
-"nnoremap <leader>tp :OmniSharpAddToProject<cr>
-"
-"" (Experimental - uses vim-dispatch or vimproc plugin) - Start the omnisharp server for the current solution
-"nnoremap <leader>ss :OmniSharpStartServer<cr>
-"nnoremap <leader>sp :OmniSharpStopServer<cr>
-"
-"" Add syntax highlighting for types and interfaces
-"nnoremap <leader>th :OmniSharpHighlightTypes<cr>
-""Don't ask to save when changing buffers (i.e. when jumping to a type definition)
-"set hidden
-"
-"" Enable snippet completion, requires completeopt-=preview
-"let g:OmniSharp_want_snippet=1
