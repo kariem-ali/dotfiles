@@ -1,2 +1,8 @@
 $include /etc/inputrc
 set completion-ignore-case on
+
+$if Bash
+  # Tab cycles through the matches (zsh-style); Shift+Tab cycles backwards.
+  TAB: menu-complete
+  "\e[Z": menu-complete-backward
+$endif

@@ -78,15 +78,18 @@ Installer and docs
 
 ## Recommended
 
-20. Use the system `git-sh-prompt`, falling back to the vendored 2017 copy.
+20. DONE (shell-tidy): use the system `git-sh-prompt`, falling back to the vendored 2017 copy; loaded in `bash/prompt`.
 21. Git defaults: `init.defaultBranch=main`, `push.autoSetupRemote`, `diff.colorMoved`; track `~/.config/git/ignore`.
     Opinionated, your call: `pull.ff=only`, `rerere.enabled`.
 22. vimrc: fix the later `set statusline=` that hides coc's status; drop `shellcmdflag=-ic`
     (side effect: bash aliases no longer work in `:!`).
-23. Make the `PROMPT_COMMAND` hook registration array-safe. It's a plain string today, so this is defensive.
+23. DROPPED: `PROMPT_COMMAND` array-safety. Our code runs first and meets a plain string; kitty's integration
+    handles both forms; no practical benefit.
 24. Prompt separator: dotfiles is the canonical copy; kitty-config's README points here.
-25. Tidy `bash/config` (duplicate colour names) and `bash/prompt` (dead functions, old PS1 lines).
-26. Move `TAB: menu-complete` to `.inputrc` inside `$if Bash … $endif`, so other readline apps are unaffected.
+25. DONE (shell-tidy): tidy `bash/config` (colour variables removed) and `bash/prompt` (dead functions removed;
+    old separator and PS1 lines kept as comments; the 6 colours it uses are named and unset after building PS1).
+26. DONE (shell-tidy): `TAB: menu-complete` moved to `.inputrc` inside `$if Bash … $endif`, plus Shift+Tab
+    (`menu-complete-backward`).
 27. SSH: add `AddKeysToAgent yes` to `~/.ssh/config`, which relies on the agent the desktop session starts; keep a
     small fallback that starts an agent only when none is reachable (TTY/ssh sessions).
 28. Pin plugin versions (`:PlugSnapshot` or commits in the vimrc).
@@ -95,9 +98,10 @@ Installer and docs
      `.exe` output name for C++ on Windows. (from Codex chunk-B review #3)
 29b. `.vimrc` `K` fallback (before coc is ready): run `keywordprg` values starting with `:` as Ex commands,
      not via `!`; matters on Windows where the default is `:help`. (from Codex chunk-B review #4)
-29c. Login shells: Ubuntu's ~/.profile sources ~/.bashrc first and then prepends ~/.local/bin again, so login
-     shells have ~/.local/bin twice and ahead of nvm's Node (non-login terminals are fine). Options: re-run
-     path dedup at the end of ~/.profile, or move PATH setup to ~/.profile. (found after the real install)
+29c. UNDECIDED (optional). Login shells: Ubuntu's ~/.profile sources ~/.bashrc first and then prepends
+     ~/.local/bin again, so login shells have ~/.local/bin twice and ahead of nvm's Node (non-login
+     terminals are fine). Fix: track a `.profile` that sets PATH *before* sourcing ~/.bashrc (dedup at the
+     end of ~/.profile alone would not restore Node's precedence). (found after the real install)
 29d. install.sh cosmetic: "~/.bashrc failed (exit code 0), printing:" when it prints errors but exits 0.
 
 ## Nice to have
@@ -126,8 +130,9 @@ Installer and docs
 
 ## Status (2026-11-12)
 
-Essentials 1-19 done: chunks A-E merged to master (fast-forward, 504dd25, not pushed), real install run,
-all checks passed. Worktree removed; `restructure` branch kept.
+Essentials 1-19 done: chunks A-E merged to master and pushed; real install run, all checks passed.
+Since then: `git lg` shows authors; `git st`/`co`/`cm` aliases (pushed). Shell tidy (20, 25, 26) on branch
+`shell-tidy`.
 
 ## Order of work
 

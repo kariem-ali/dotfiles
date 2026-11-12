@@ -10,11 +10,11 @@ checks that everything works.
 |---|---|---|
 | `.bashrc` | `~/.bashrc` | Interactive shell: history, colours, completion; loads the `bash/` modules, nvm and `~/.bashrc.local` |
 | `bash/env` | *loaded by `.bashrc`* | `PATH`: adds `~/bin` and `~/.local/bin` (first) if they exist, without duplicates |
-| `bash/config` | *loaded by `.bashrc`* | Tab cycles through completions; `Ctrl+S` searches history forward; colour names for the prompt |
+| `bash/config` | *loaded by `.bashrc`* | `Ctrl+S` searches history forward (turns off terminal flow control) |
 | `bash/prompt` | *loaded by `.bashrc`* | Prompt: a full-width separator line, then `user@host:folder(git branch)`, then `$` |
-| `bash/git-prompt.sh` | *loaded by `.bashrc`* | `__git_ps1` for the prompt (copy from git, 2017) |
+| `bash/git-prompt.sh` | *loaded by `bash/prompt`* | Fallback copy (2017) of git's prompt script, used only where git doesn't provide `__git_ps1` |
 | `bash/aliases` | *loaded by `.bashrc`* | git shortcuts (`gs`, `gd`, `gl`, ...), `mcd`, `cdf`, `run_ssh_agent`, kubectl |
-| `.inputrc` | `~/.inputrc` | Case-insensitive tab completion |
+| `.inputrc` | `~/.inputrc` | Case-insensitive completion; in bash, Tab cycles through matches and Shift+Tab goes back |
 | `.gitconfig` | `~/.gitconfig` | Name, email, editor, `git l` / `git lg` log aliases; includes `~/.gitconfig.local` |
 | `.vimrc` | `~/.vimrc` | Vim settings, mappings and plugins (vim-plug) |
 | `.vim/colors/*.vim` | `~/.vim/colors/` | Colour schemes (solarized is the one in use) |
@@ -244,7 +244,6 @@ Run `./install.sh` again; it carries on where it stopped.
 - **coc.nvim's status in the status line is hidden** by a later `statusline` setting in `.vimrc`.
 - **`:!` runs an interactive bash** (`shellcmdflag=-ic`) so aliases work there, which makes `:!`
   commands start a bit slower.
-- **`bash/git-prompt.sh` is a 2017 copy** of git's prompt script; the system's own copy is newer.
 - **The installer's checks** use a clean environment, so they check what the repo's files do, not
   what an already-open terminal inherited. The coc.nvim check confirms that it loads, not that it
   starts with Node.js; open vim to see that.
@@ -262,7 +261,6 @@ Linux Mint 22.3, bash 5.2, vim 9.1, git 2.43, Node.js 24 (nvm), November 2026.
 
 ## Future work
 
-- Use the system's `git-sh-prompt`, falling back to the bundled copy.
 - More git defaults (`init.defaultBranch=main`, `push.autoSetupRemote`, `diff.colorMoved`) and a
   tracked global gitignore.
 - Fix the `statusline` that hides coc.nvim's status; reconsider `shellcmdflag=-ic`.

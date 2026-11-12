@@ -36,7 +36,6 @@ fi
 # --- Modules from this repo ---------------------------------------------------
 . "$DOTFILES/bash/env"
 . "$DOTFILES/bash/config"
-. "$DOTFILES/bash/git-prompt.sh"
 . "$DOTFILES/bash/prompt"
 . "$DOTFILES/bash/aliases"
 

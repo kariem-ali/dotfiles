@@ -1,14 +1,13 @@
-function get_git_branch()
-{
-  if [ -d .git ]; then
-    echo "(`git branch | grep "^\*" | cut -c3-`)"
+# __git_ps1 for the prompt: git's own copy (bash-completion usually loads it already),
+# or the bundled 2017 copy next to this file where git doesn't provide one.
+if ! declare -F __git_ps1 >/dev/null; then
+  if [ -f /usr/lib/git-core/git-sh-prompt ]; then
+    . /usr/lib/git-core/git-sh-prompt
+  else
+    . "$(dirname "${BASH_SOURCE[0]}")/git-prompt.sh"
   fi
-}
+fi
 
-function get_time()
-{
-  echo "`date +%H:%M:%S`"
-}
 # Old: one dash short of full width, and fixed at the width the shell started with
 #separator=`seq -s '-' $((COLUMNS)) | grep -o '-' | xargs | sed 's/[[:space:]]//g'`
 # Full-width separator, rebuilt before every prompt so it follows window resizes
@@ -20,7 +19,13 @@ __update_separator() {
 if [[ $PROMPT_COMMAND != *__update_separator* ]]; then
   PROMPT_COMMAND="__update_separator${PROMPT_COMMAND:+; $PROMPT_COMMAND}"
 fi
+# Old prompts (they used the colour variables that were in bash/config)
 #export PS1="${G}\u@\h:${Y}\W${W}\$(get_git_branch)\n\\$ ${W}"
 #export PS1="${Gray}$separator\n${G}\u@\h:${Y}\W${W}\$(__git_ps1 \"(%s)\")\n\\$ ${W}"
-export PS1="${LightBlue}\${separator}\n${G}\u${LightGreen}@${G}\h${LightBlue}:${Y}\W${LightBlue}\$(__git_ps1 \"(%s)\")\n${B}\\$ ${W}"
 
+# Prompt: the separator line, then user@host:folder(git branch), then $ on its own line.
+# The colours are only needed while PS1 is built; \[ \] tell bash they take no space.
+_blue='\[\033[0;34m\]' _lightblue='\[\033[1;34m\]' _green='\[\033[0;32m\]'
+_lightgreen='\[\033[1;32m\]' _yellow='\[\033[0;33m\]' _grey='\[\033[0;37m\]'
+export PS1="${_lightblue}\${separator}\n${_green}\u${_lightgreen}@${_green}\h${_lightblue}:${_yellow}\W${_lightblue}\$(__git_ps1 \"(%s)\")\n${_blue}\\$ ${_grey}"
+unset _blue _lightblue _green _lightgreen _yellow _grey
