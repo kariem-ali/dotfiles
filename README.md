@@ -17,7 +17,7 @@ checks that everything works.
 | `.inputrc` | `~/.inputrc` | Case-insensitive completion; in bash, Tab cycles through matches and Shift+Tab goes back |
 | `.gitconfig` | `~/.gitconfig` | Name, email, editor, `git l` / `git lg` log aliases; includes `~/.gitconfig.local` |
 | `.vimrc` | `~/.vimrc` | Vim settings, mappings and plugins (vim-plug) |
-| `.vim/colors/*.vim` | `~/.vim/colors/` | Colour schemes (solarized is the one in use) |
+| `.vim/colors/*.vim` | `~/.vim/colors/` | Colour schemes: Hearth (the default) and the old Solarized, plus a few unused ones |
 | `.vim/syntax/cs.vim` | `~/.vim/syntax/` | C# syntax highlighting |
 | `.ideavimrc` | `~/.ideavimrc` | IntelliJ IdeaVim: reuses `~/.vimrc` |
 | `install.sh` | | Installer |
@@ -26,7 +26,8 @@ Vim plugins (installed by the installer into `~/.vim/plugged`, not part of this 
 [vim-surround](https://github.com/tpope/vim-surround),
 [vim-fugitive](https://github.com/tpope/vim-fugitive),
 [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim),
-[vim-antlr](https://github.com/dylon/vim-antlr) and
+[vim-antlr](https://github.com/dylon/vim-antlr),
+[vim-solarized8](https://github.com/lifepillar/vim-solarized8) (true Solarized colours) and
 [coc.nvim](https://github.com/neoclide/coc.nvim) (completion and go-to-definition; needs Node.js)
 with the `coc-json` and `coc-tsserver` extensions.
 
@@ -199,6 +200,28 @@ With coc.nvim running:
 | `,a`, `,ac`, `,f` | Code action on selection, on file; quick fix |
 | `Space a`, `Space o`, `Space s` | Lists: diagnostics, outline, symbols |
 
+## Colour schemes
+
+Vim starts with **Hearth**, the vim twin of the Hearth theme in
+[kitty-config](https://github.com/kariem-ali/kitty-config): the same palette and goals (warm,
+low-glare, text at about 12.5:1, muted accents of at least 6:1, dim text of at least 5.5:1, no
+italics). Switch any time with `:colorscheme <name>`; `.vimrc` applies each scheme's own settings,
+so nothing else is needed. To change the default, comment out `colorscheme hearth` at the end of
+`.vimrc` and uncomment another `colorscheme` line.
+
+| Scheme | What it is |
+|---|---|
+| `hearth` | The default (`.vim/colors/hearth.vim`) |
+| `habamax` | Ships with vim |
+| `solarized8` | True Solarized, from the vim-solarized8 plugin (also `solarized8_flat`, `_high`, `_low`) |
+| `solarized` | The old Solarized, drawn with the terminal's 16 colours. In kitty with the Hearth theme it shows Hearth's colours in Solarized's layout |
+
+Exact colours need true colour, which `.vimrc` turns on in kitty, Windows Terminal, and any
+terminal that sets `COLORTERM=truecolor`. Elsewhere (for example over SSH when `COLORTERM` isn't
+passed on), Hearth uses the terminal's 16 colours: right when the terminal runs the Hearth theme,
+and still readable with others. For a terminal that has true colour but doesn't say so, add
+`export COLORTERM=truecolor` to `~/.bashrc.local`.
+
 ## Windows
 
 `install.sh` and the bash files are for Linux. **`.vimrc` also works with native Windows Vim and
@@ -248,6 +271,10 @@ Run `./install.sh` again; it carries on where it stopped.
   what an already-open terminal inherited. The coc.nvim check confirms that it loads, not that it
   starts with Node.js; open vim to see that.
 - **apt only:** other package managers aren't supported; use `--no-packages` there.
+- **Without true colour, Hearth's tints are gone:** the faint backgrounds for the cursor line,
+  diffs and references need true colour; with 16 colours, diffs are told apart by text colour.
+- **The cursor colour comes from the terminal** (kitty's Hearth cursor is the same wheat); the
+  scheme's `Cursor` colour is used only in gVim.
 
 ## Tested with
 

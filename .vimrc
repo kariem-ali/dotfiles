@@ -15,6 +15,8 @@ if s:have_plug
   Plug 'dylon/vim-antlr'
   Plug 'ctrlpvim/ctrlp.vim'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  " True Solarized colour scheme (see the colour schemes at the end)
+  Plug 'lifepillar/vim-solarized8'
   call plug#end()               " also turns on filetype plugins, indent and syntax
 else
   filetype plugin indent on
@@ -47,7 +49,6 @@ set listchars=tab:▸\ ,eol:¬,precedes:‹,extends:›,trail:•
 set lazyredraw
 set foldmethod=manual           " Don't fold using syntax rules (i.e. #region for C# etc...)
 "set colorcolumn=81              " Add boundary column at 81 reference
-set t_Co=256                    " Set number of colours to 256
 set splitbelow                  " New windows open below
 set splitright                  " New vertical windows open to the right
 let mapleader = ","
@@ -60,9 +61,6 @@ xnoremap L $
 if !has('win32')
   set shell=/bin/bash           " on Windows, keep the default (cmd.exe)
 endif
-
-" highlight boundary columns background with black
-highlight ColorColumn ctermbg=darkgrey
 
 " Auto-save on text chang
 "autocmd TextChanged,TextChangedI * silent write
@@ -336,9 +334,9 @@ if has("autocmd")
       autocmd BufNewFile,BufRead *.patch set filetype=diff
       autocmd BufNewFile,BufRead *.diff set filetype=diff
 
-      autocmd Syntax diff
-      \ highlight WhiteSpaceEOL ctermbg=red |
-      \ match WhiteSpaceEOL /\(^+.*\)\@<=\s\+$/
+      " Trailing spaces on added lines; the colour comes from the colour scheme
+      " (see colour_schemes below)
+      autocmd Syntax diff match WhiteSpaceEOL /\(^+.*\)\@<=\s\+$/
 
       autocmd Syntax gitcommit setlocal textwidth=74
 endif " has("autocmd")
@@ -347,17 +345,62 @@ let &t_SI = "\<Esc>[6 q"
 let &t_SR = "\<Esc>[4 q"
 let &t_EI = "\<Esc>[2 q"
 
-set background=dark             " Use colours that work well on a dark background (Console is usually black)
-let g:solarized_termtrans=1     " Use the correct abckground color for transparent background. Must be before colorscheme solarized
-let g:solarized_visibility="low"
-colorscheme solarized
+" Coloured wavy underlines (spelling, coc diagnostics) in kitty. Vim takes the undercurl
+" code from terminfo's Cs entry, which in kitty's terminfo sets the cursor colour instead,
+" and only sends underline colours once the terminal has identified itself.
+if $TERM =~# 'kitty'
+  let &t_Cs = "\e[4:3m"
+  let &t_Ce = "\e[4:0m"
+  let &t_8u = "\e[58;2;%lu;%lu;%lum"
+endif
 
-hi Pmenu ctermul=2
-hi Pmenu cterm=bold
-hi Pmenu ctermfg=Black
-hi Pmenu ctermbg=Gray
+" Colour schemes. Hearth is the default; switch any time with :colorscheme <name>.
+" To change the default, comment out 'colorscheme hearth' below and uncomment another.
+" The autocmds below apply each scheme's own settings, so :colorscheme alone is enough.
+"   hearth      the Hearth kitty theme's colours (.vim/colors/hearth.vim)
+"   habamax     ships with vim
+"   solarized8  true Solarized (the vim-solarized8 plugin)
+"   solarized   the old Solarized, drawn with the terminal's 16 colours, so in kitty
+"               with the Hearth theme it shows Hearth's colours in Solarized's layout
 
-highlight SpellBad ctermfg=red ctermbg=gray
+" Exact (true) colours where the terminal supports them: kitty, Windows Terminal, or
+" any terminal that sets COLORTERM. Elsewhere schemes use the terminal's own colours.
+let s:truecolor = has('termguicolors')
+      \ && ($COLORTERM =~# 'truecolor\|24bit' || $TERM =~# 'kitty' || !empty($WT_SESSION))
+
+" Runs before every :colorscheme, but only for a scheme that exists (a mistyped name
+" changes nothing): reset the :terminal colours (schemes that have their own set them
+" again), turn true colour off for the old Solarized and on for the rest, and set the
+" old Solarized's options (solarized8 reads the same names, so they're cleared for it).
+function! s:before_colorscheme(name) abort
+  if empty(globpath(&runtimepath, 'colors/' . a:name . '.vim', 0, 1))
+    return
+  endif
+  unlet! g:terminal_ansi_colors g:solarized_termtrans g:solarized_visibility
+  if has('termguicolors')
+    let &termguicolors = s:truecolor && a:name !=# 'solarized'
+  endif
+  if a:name ==# 'solarized'
+    let g:solarized_termtrans = 1
+    let g:solarized_visibility = 'low'
+  endif
+endfunction
+
+augroup colour_schemes
+  autocmd!
+  autocmd ColorSchemePre * call s:before_colorscheme(expand('<amatch>'))
+  " The old Solarized's menu and spelling colours, as before
+  autocmd ColorScheme solarized hi Pmenu cterm=bold ctermfg=Black ctermbg=Gray
+        \ | hi SpellBad ctermfg=red ctermbg=gray
+  " Trailing spaces in diffs: red, unless the scheme picks a colour (Hearth does)
+  autocmd ColorScheme * hi default WhiteSpaceEOL ctermbg=red guibg=red
+augroup END
+
+set background=dark
+colorscheme hearth
+"colorscheme habamax
+"colorscheme solarized8
+"colorscheme solarized
 
 "let &t_SI.="\e[5 q"
 "let &t_SR.="\e[4 q"

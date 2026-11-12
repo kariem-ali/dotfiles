@@ -120,8 +120,9 @@ Installer and docs
      Keep: autoload/plug.vim, plugged/, the linked colors/ and syntax/ files, and the empty after/ compiler/
      doc/ ftdetect/ ftplugin/ indent/ folders (harmless; can go with item 31).
 36. Move git config to `~/.config/git/config` (only together with removing `~/.gitconfig`).
-37. Windows cosmetics in `.vimrc`: ASCII fallback for `listchars`, guard the cursor-shape codes and `t_Co=256`
-    by terminal, note that gVim's font needs Source Code Pro. (from Codex chunk-B review)
+37. Windows cosmetics in `.vimrc`: ASCII fallback for `listchars`, guard the cursor-shape codes by terminal,
+    note that gVim's font needs Source Code Pro. (from Codex chunk-B review; `t_Co=256` is gone)
+38. kitty-config README: point to the Hearth vim scheme in this repo.
 
 ## Decisions
 
@@ -131,8 +132,9 @@ Installer and docs
 ## Status (2026-11-12)
 
 Essentials 1-19 done: chunks A-E merged to master and pushed; real install run, all checks passed.
-Since then: `git lg` shows authors; `git st`/`co`/`cm` aliases (pushed). Shell tidy (20, 25, 26) on branch
-`shell-tidy`.
+Since then: `git lg` shows authors; `git st`/`co`/`cm` aliases (pushed). Shell tidy (20, 25, 26) merged.
+Vim colour schemes: Hearth (the vim twin of the kitty theme) is the default; habamax, true Solarized
+(vim-solarized8) and the old 16-colour Solarized switch with `:colorscheme`; coloured wavy underlines in kitty.
 
 ## Order of work
 
