@@ -6,7 +6,10 @@
 [alias]
 	# Used by the gl / glg shell aliases
 	l = log --oneline --decorate -20
-	lg = log --graph --oneline --decorate --all
+	lg = log --graph --all --format='%C(auto)%h %C(blue)%an%C(auto)%d %s'
+	st = status
+	co = checkout
+	cm = commit
 # Machine-specific settings, e.g. a work email (not in the repo; ignored if missing)
 [include]
 	path = ~/.gitconfig.local
