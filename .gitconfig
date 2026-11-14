@@ -5,8 +5,8 @@
 	editor = vim
 [alias]
 	# Used by the gl / glg shell aliases
-	l = log --oneline --decorate -20
-	lg = log --graph --all --format='%C(auto)%h %C(blue)%an%C(auto)%d %s'
+	l = log --format='%C(auto)%h %C(green)%ad %C(blue)%an%C(auto)%d %s' --date=short -20
+	lg = log --graph --all --format='%C(auto)%h %C(green)%ad %C(blue)%an%C(auto)%d %s' --date=short
 	st = status
 	co = checkout
 	cm = commit
